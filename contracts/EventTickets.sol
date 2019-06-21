@@ -105,6 +105,7 @@ contract EventTickets {
     */
 
     function buyTickets(uint ticketsNo) public payable{
+        emit LogBuyTickets(msg.sender, ticketsNo);
         require(myEvent.isOpen == true);
         require (msg.value >= (ticketsNo * TICKET_PRICE));
         require(myEvent.totalTickets > ticketsNo);
