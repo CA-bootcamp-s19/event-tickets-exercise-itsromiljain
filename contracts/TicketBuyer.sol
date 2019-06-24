@@ -10,6 +10,10 @@ contract TicketBuyer {
         _eventTicket.buyTickets.value(ticketPrice)(ticketNo);
     }
 
+    function getRefund(EventTickets _eventTicket) public {
+        _eventTicket.getRefund();
+    }
+
     function() external payable{
     }
 

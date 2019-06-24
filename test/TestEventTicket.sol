@@ -13,9 +13,12 @@ contract TestEventTicket {
     ThrowProxy proxy;
     TicketBuyer buyer;
 
+    uint public initialBalance = 1 ether;
+
     function beforeAll() public {
         eventTickets = EventTickets(DeployedAddresses.EventTickets());
         proxy = new ThrowProxy(address(eventTickets));
+        address(buyer).transfer(500 wei);
         buyer = (new TicketBuyer).value(200 wei)();
     }
 
@@ -48,6 +51,19 @@ contract TestEventTicket {
         (, , uint totalTickets, uint sales, ) = eventTickets.readEvent();
         Assert.equal(totalTickets, 99, "The total ticket numbers should match");
         Assert.equal(sales, 1, "The sales numbers should match");
+    }
+
+    function testGetRefunds() public {
+        buyer.getRefund(eventTickets);
+        (, , uint totalTickets, uint sales, ) = eventTickets.readEvent();
+        Assert.equal(totalTickets, 100, "The total ticket numbers should match");
+        Assert.equal(sales, 0, "The sales numbers should match");
+    }
+
+    function testGetRefundsWithNoTickets() public {
+        EventTickets(address(proxy)).getRefund();
+        bool r = proxy.execute();
+        Assert.isFalse(r, "Buyer doesn't have sufficient tickets");
     }
 
     function() external{
