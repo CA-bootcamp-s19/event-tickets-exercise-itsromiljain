@@ -8,12 +8,11 @@ import "../contracts/ThrowProxy.sol";
 import "../contracts/TicketBuyer.sol";
 
 contract TestEventTicket {
+    uint public initialBalance = 1 ether;
 
     EventTickets eventTickets;
     ThrowProxy proxy;
     TicketBuyer buyer;
-
-    uint public initialBalance = 1 ether;
 
     function beforeAll() public {
         eventTickets = EventTickets(DeployedAddresses.EventTickets());
